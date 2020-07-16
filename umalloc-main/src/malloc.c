@@ -51,3 +51,37 @@ memhdr_t *get_free_block(size_t size) {
 	}
 	return NULL;
 }
+
+void ufree(void *block) {
+	memhdr_t *header;
+
+	if (!block) {
+		return;
+	}
+
+	pthread_mutex_lock(&global_memlock);
+	header = (memhdr_t * )(block - 1);
+
+	void *pbreak = sbrk(0);
+	memhdr_t *tmp;
+	if ((char *) block + header->size == pbreak) {
+		if (head == tail) {
+			head = tail = NULL;
+		} else {
+			tmp = head;
+			while (tmp) {
+				if (tmp->next == tail) {
+					tmp->next = NULL;
+					tail = tmp;
+				}
+				tmp = tmp->next;
+			}
+		}
+		sbrk(0 - sizeof(memhdr_t) - header->size);
+		pthread_mutex_unlock(&global_memlock);
+		return;
+	}
+
+	header->is_free = 1;
+	pthread_mutex_unlock(&global_memlock);
+}
