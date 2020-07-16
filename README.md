@@ -1,5 +1,5 @@
 # Malloc
-Simple memory allocator in C.
+Simple memory allocator header-only library written in C.
 ## Usage
 Just clone repository and use code:
 ```
@@ -18,3 +18,9 @@ target_link_libraries(
 )
 # ...
 ```
+Or compile by hand:
+```
+$ gcc -o umalloc.so -fPIC -shared umalloc.c
+```
+### Notes
+- `sbrk` function is used from `unistd.h` header. For now only linux-based systems support build.

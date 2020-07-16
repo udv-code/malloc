@@ -102,3 +102,21 @@ void *ucalloc(size_t num, size_t nsize) {
 	memset(block, 0, size);
 	return block;
 }
+
+void *urealloc(void *block, size_t size) {
+	if (!block || !size) {
+		return umalloc(size);
+	}
+
+	memhdr_t *header = (memhdr_t *) block - 1;
+	if (header->size >= size) {
+		return block;
+	}
+
+	void *ret = umalloc(size);
+	if (ret) {
+		memcpy(ret, block, header->size);
+		ufree(block);
+	}
+	return ret;
+}
