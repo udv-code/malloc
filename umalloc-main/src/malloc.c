@@ -85,3 +85,20 @@ void ufree(void *block) {
 	header->is_free = 1;
 	pthread_mutex_unlock(&global_memlock);
 }
+
+void *ucalloc(size_t num, size_t nsize) {
+	if (!num || !nsize) {
+		return NULL;
+	}
+
+	size_t size = num * nsize;
+	if (nsize != size / num) {
+		return NULL; // If ml
+	}
+	void *block = umalloc(size);
+	if (!block) {
+		return NULL;
+	}
+	memset(block, 0, size);
+	return block;
+}
