@@ -1,0 +1,39 @@
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+
+## Options
+set(MALLOC_BUILD_EXAMPLE "Build example" ON)
+
+### Global configs
+set(CMAKE_DEBUG_POSTFIX "-debug")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+### Project config
+set(MALLOC_PROJECT_NAME "umalloc")
+set(MALLOC_VERSION_MAJOR 1)
+set(MALLOC_VERSION_MINOR 0)
+set(MALLOC_VERSION_HOTFIX 0)
+set(MALLOC_VERSION "${MALLOC_VERSION_MAJOR}.${MALLOC_VERSION_MINOR}.${MALLOC_VERSION_HOTFIX}")
+set(MALLOC_NAME_VERSION "${MALLOC_PROJECT_NAME} v${MALLOC_VERSION}")
+### Target Config
+set(MALLOC_TARGET_NAME "${MALLOC_PROJECT_NAME}")
+
+if (WIN32)
+	set(CMAKE_USE_RELATIVE_PATHS ON)
+endif ()
+
+### Project setup
+project(
+		${MALLOC_PROJECT_NAME}
+		VERSION ${MALLOC_VERSION}
+		LANGUAGES C
+)
+
+### Target
+add_subdirectory(umalloc-main)
+
+if (MALLOC_BUILD_EXAMPLE)
+	add_subdirectory(example)
+endif ()
